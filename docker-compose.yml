@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - 8080:8080
+    networks:
+      - poc-network
+    depends_on:
+      - sonar
+    command: ./mvnw clean verify sonar:sonar -Dsonar.host.url=http://sonar:9000
+
+  sonar:
+    build:
+      context: .
+      dockerfile: Dockerfile.sonar
+    container_name: sonar
+    ports:
+      - 9000:9000
+    networks:
+      - poc-network
+
+networks:
+    poc-network:
+      driver: bridge
